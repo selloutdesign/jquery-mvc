@@ -8,7 +8,7 @@ var Controller = function (view, model) {
   // here we are binding these functions to the body so that we can access
   // them from the model and view
   $('body').bind('addItem', function(e) {
-    console.log(e);
+    // referencing the method in the model
     model.addTodo( e.todo );
   });
 

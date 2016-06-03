@@ -38,7 +38,7 @@ var View = function () {
     });
 
     // delete todo function
-		$( "#todoList" ).on( "click", "#todoList a", function(e) {
+		$( "#todoList" ).on( "click", "a", function(e) {
 
 			// get the item that was clicked
 			var $todo = e.currentTarget;
