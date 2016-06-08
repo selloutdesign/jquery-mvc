@@ -1,70 +1,96 @@
 'use strict'
+    // <div class="col s6 push-s3">
+    //   <h3>Todo MVC</h3>
+    //     <label for="addTodo">Add todo</label>
+    //     <input type="text" id="addTodo" />
+    //     <input type="button" value="add" id="addTodoButton" class="waves-effect waves-light btn"/>
+    //   <ul id="todoList"></ul>
+    // </div>
 
-var View = function () {
 
-	var updateView = function ( todos ) {
+var mvcE = {};
 
-		// clear everything out from the DOM
+mvcE.Model = function(){
+	var items = [];
+
+	var notifyController = function(){
+		$('body').trigger('updateView');
+	};
+
+	// Public Methods
+	return{
+		
+			addItem: function (item){
+				items.push(item); // if I wanted to use 'this' here what would it be referencing?
+				notifyController();
+				console.log(items);	
+			},
+			getData: function (){
+				return items;
+			}
+
+	};
+};
+
+
+mvcE.View = function(){
+
+	var updateView = function( items ){
 		$('#todoList li').remove();
+		for( var i = 0, len = items.length; i < len; i++ ){
+			$('#todoList').append( "<li>" + items[i] + " <a data-index='" + i + "' href='#'>remove</a></li>" );
+    	}
+	};
 
-		// todo: use clone here and only write to the dom once
-		for( var i = 0, len = todos.length; i < len; i++ ){
-			$('#todoList').append( "<li>" + todos[i] + " <a data-index='" + i + "' href='#'>remove</a></li>" );
-    }
+	// Get information from the User
+	var initView = function(){
+
+
+		$('#addTodoButton').on('click', function(event) {
+			var e = jQuery.Event("addItem");
+			var value = $('#addTodo').val();
+
+			if(value) {
+				e.todo = value;
+				$('body').trigger(e)
+				console.log(value);
+			}
+
+		});
+
 
 	};
 
-  //setup the handlers for the view
-  var initView = function() {
+	initView();
 
-		// add todo function
-    $("#addTodoButton").on("click", function() {
-
-			// this is referencing the addItem function from the controller
-			// jQuery.Event is the same as adding a click hanlder
-      var e = jQuery.Event("addItem");
-
-			// this gets the value from the input and attaches it to the event object
-      e.todo = $('#addTodo').val();
-
-			// check to make sure we have a value in the input
-			if(e.todo) {
-
-				// this calls the addItem function from the controller
-				// trigger is used to simulate a click by the user (or at least has the same effect)
-				$('body').trigger(e);
-			}
-
-			// reset the input value to empty string
-      $('#addTodo').val('');
-    });
-
-    // delete todo function, click delgated to "a"
-		$( "#todoList" ).on( "click", "a", function(e) {
-
-			// get the item that was clicked
-			var $todo = e.currentTarget;
-
-			// this is referencing the deleteItem function from the controller
-			// jQuery.Event is the same as adding a click hanlder
-      var e = jQuery.Event("deleteItem");
-
-			// establish the index of the todo item and attach to the event(e) object
-			e.index = $($todo).attr('data-index');
-
-			// trigger the delete method from the controller
-			// trigger is used to simulate a click by the user (or at least has the same effect
-      $('body').trigger(e);
-    });
-
-  };
-
-  initView();
-
-	// references a method in the controller to update the view when called
-	return  {
-		updateView: function (todos) {
-      updateView(todos);
+	return {
+		updateView: function(items){
+			updateView(items);
 		}
 	};
 };
+
+
+mvcE.Controller = function(view, model){
+	  var view = view;
+  	  var model = model;
+
+	// Pass information from the view to the model
+	$('body').on('addItem', function(e){
+
+		model.addItem(e.todo);
+	});
+
+	$('body').on('updateView', function(e){
+
+		view.updateView( model.getData() );
+	});
+
+
+
+};
+
+var model = mvcE.Model();
+var view = mvcE.View();
+var controller = mvcE.Controller(view, model);
+
