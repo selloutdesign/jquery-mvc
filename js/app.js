@@ -1,6 +1,6 @@
 'use strict'
 
-//initializing every thing that has been exposed as public
+//initializing our model, view and controller
 var model = Model();
 var view = View();
 var controller = Controller(view, model);

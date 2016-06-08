@@ -6,22 +6,22 @@ var Model = function () {
   var todos = [];
 
   // updateView is actually on the controller, here the model is just triggering
-  //it everytime something changes on the model
+  // it everytime something changes on the model
 	var notifyController = function () {
     $('body').trigger('updateView');
 	}
 
-  // These publci methods are returned as an object and can be accessed with the
+  // These public methods are returned as an object and can be accessed with the
   // Model.methodName syntax from the controller
 	return  {
 
-    addTodo: function ( todo ) {
+    addTodo: function (todo) {
       todos.push(todo);
       notifyController();
 		},
 
-    deleteTodo: function ( index ) {
-      todos.splice(index,1);
+    deleteTodo: function (index) {
+      todos.splice(index, 1);
       notifyController();
 		},
 

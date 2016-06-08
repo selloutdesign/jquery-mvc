@@ -1,23 +1,27 @@
+'use strict'
 
 var Controller = function (view, model) {
 
-  // setting fucntion arguments to local variables
+  // setting function arguments to local variables
   var view = view;
   var model = model;
 
   // here we are binding these functions to the body so that we can access
   // them from the model and view
-  $('body').bind('addItem', function(e) {
-    // referencing the method in the model
-    model.addTodo( e.todo );
+  $('body').on('addItem', function(event) {
+
+    // referencing the addTodo method in the model
+    model.addTodo( event.todo );
   });
 
-  $('body').bind('deleteItem', function(e) {
+  $('body').on('deleteItem', function(event) {
+
     // referencing the method in the model
-    model.deleteTodo( e.index );
+    model.deleteTodo( event.index );
   });
 
-  $('body').bind('updateView', function(e) {
+  $('body').on('updateView', function() {
+
     // this is the tie between the view and model to refresh the data
     view.updateView( model.getData() );
   });
